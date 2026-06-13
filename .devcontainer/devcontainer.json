@@ -1,0 +1,133 @@
+{
+  "name": "ROS Noetic Development Environment",
+  "workspaceFolder": "/home/user/workspace",
+  // ポートフォワーディング（ROS用）
+  "forwardPorts": [
+    9090,
+    11311
+  ],
+  "portsAttributes": {
+    "9090": {
+      "label": "ROSBridge WebSocket",
+      "onAutoForward": "notify"
+    },
+    "11311": {
+      "label": "ROS Master",
+      "onAutoForward": "notify"
+    }
+  },
+  // VS Code設定とエクステンション
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "python.defaultInterpreterPath": "/usr/bin/python3",
+        "python.terminal.activateEnvironment": false,
+        "terminal.integrated.shell.linux": "/bin/bash",
+        "editor.formatOnSave": true,
+        "editor.codeActionsOnSave": {
+          "source.organizeImports": "explicit"
+        },
+        "files.exclude": {
+          "**/build": false,
+          "**/devel": false,
+          "**/__pycache__": true,
+          "**/.pytest_cache": true,
+          "**/logs": true
+        },
+        "cmake.configureOnOpen": true,
+        "C_Cpp.default.intelliSenseMode": "gcc-x64"
+      },
+      "extensions": [
+        // ROS開発
+        "ms-vscode.cpptools",
+        "ms-vscode.cmake-tools",
+        "twxs.cmake",
+        "ms-python.python",
+        // "ms-iot.vscode-ros",
+        "betwo.b2-catkin-tools",
+        // Python開発
+        "ms-python.flake8",
+        "ms-python.autopep8",
+        "ms-python.isort",
+        // 一般的な開発ツール
+        "ms-vscode.vscode-json",
+        "redhat.vscode-yaml",
+        "ms-vscode.hexeditor",
+        "GitHub.copilot",
+        "GitHub.copilot-chat"
+      ]
+    }
+  },
+  // コンテナ作成後に実行するコマンド
+  "postCreateCommand": "source /opt/ros/noetic/setup.bash && catkin_make || echo 'catkin_make failed, workspace may not be initialized yet'",
+  // 開発用コマンド
+  // 起動時にマウントされたボリュームの所有権を修正しておく（root所有のボリュームが原因で書き込みできない問題を防ぐ）
+  // ユーザーにsudo権限があることを想定しています。
+  "postStartCommand": "sudo chown -R $(id -u):$(id -g) /home/user/workspace/build /home/user/workspace/devel || true && echo 'ROS Noetic development environment is ready!'",
+  // ボリュームマウント - ホストとコンテナ間でファイル同期
+  "mounts": [
+    // Python packages cache
+    "source=ros-pip-cache,target=/home/user/.cache/pip,type=volume"
+  ],
+  // ワークスペース全体をマウント（これが重要）
+  "workspaceMount": "source=${localWorkspaceFolder},target=/home/user/workspace,type=bind,consistency=cached",
+  // 環境変数
+  "containerEnv": {
+    "ROS_DISTRO": "noetic",
+    "PYTHONPATH": "/home/user/workspace/src",
+    "ROS_WORKSPACE": "/home/user/workspace",
+    "LIBGL_ALWAYS_INDIRECT": "0",
+    "WAYLAND_DISPLAY": ""
+  },
+  // リモートユーザー
+  "remoteUser": "user",
+  // build引数でDockerfileのUID/GIDを設定
+  "build": {
+    "dockerfile": "Dockerfile",
+    "args": {
+      "UID": "1000",
+      "GID": "1000",
+      "USERNAME": "user",
+      "GROUPNAME": "user"
+    }
+  },
+  // 機能
+  "features": {
+    "ghcr.io/devcontainers/features/git:1": {},
+    "ghcr.io/devcontainers/features/github-cli:1": {}
+  },
+  // GUI アプリケーション用の追加設定
+  "runArgs": [
+    // Allow access to NVIDIA GPUs (requires NVIDIA drivers + nvidia-container-toolkit on the host)
+    "--gpus",
+    "all",
+    // Ensure /dev/shm is large enough for PyTorch DataLoader shared memory
+    "--shm-size",
+    "64gb",
+    // NOTE: --ipc=host forces /dev/shm to match the host (often 64M in Docker),
+    // which overrides --shm-size and triggers DataLoader shm errors.
+    "--privileged",
+    "-e",
+    "DISPLAY=${localEnv:DISPLAY}",
+    "-v",
+    "/tmp/.X11-unix:/tmp/.X11-unix:rw",
+    // Optional: allow access to DRM devices for direct rendering (useful for Intel/AMD integrated GPUs)
+    "--device",
+    "/dev/dri",
+    // Keep USB devices accessible (for cameras, sensors) - host must expose them when running the container
+    "--device",
+    "/dev/bus/usb",
+    // Pass NVIDIA env hints (some runtimes/tooling respect these inside the container)
+    "--env",
+    "NVIDIA_VISIBLE_DEVICES=all",
+    "--env",
+    "NVIDIA_DRIVER_CAPABILITIES=compute,video,graphics,utility,display"
+  ],
+  // コンテナの機能拡張
+  "capAdd": [
+    "SYS_PTRACE"
+  ],
+  "securityOpt": [
+    "seccomp:unconfined"
+  ]
+}

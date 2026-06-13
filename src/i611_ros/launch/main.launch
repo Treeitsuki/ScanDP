@@ -1,0 +1,144 @@
+<launch>
+  <!-- Real hardware: use system clock -->
+  <param name="/use_sim_time" value="false"/>
+
+  <!-- <node name="ds102_driver" pkg="i611_ros" type="ds102_driver.py" output="screen"/> -->
+  <!-- <node name="i611_driver" pkg="i611_ros" type="i611_driver.py" output="screen"/> -->
+
+  <!-- PointCloud alignment (ds102 + arm done trigger) -->
+  <arg name="enable_moveit_done_bridge" default="false"/>
+  <arg name="arm_done_topic" default="/arm/move_done"/>
+  <arg name="enable_trans_node" default="true"/>
+  <arg name="inf_from_ee_topic" default="/trans/inf_from_ee"/>
+  <arg name="inf_from_ee_frame" default="map"/>
+
+  <node pkg="i611_ros" type="gridmap_node.py" name="gridmap_node" output="screen">
+    <param name="sensor_topic" value="/camera/depth/color/points" />
+    <param name="map_frame" value="map" />
+    <param name="use_rgb" value="true" />
+    <param name="gpu_id" value="0" />
+
+    <param name="x_min" value="-0.8" />
+    <param name="x_max" value="0.8" />
+    <param name="y_min" value="-0.8" />
+    <param name="y_max" value="0.8" />
+    <param name="z_min" value="0.0" />
+    <param name="z_max" value="1.6" />
+    <param name="resolution" value="0.01" />
+
+    <param name="p_init" value="0.5" />
+    <param name="p_free" value="0.4" />
+    <param name="p_occ" value="0.7" />
+    <param name="vis_threshold" value="0.6" />
+
+  </node>
+
+  <!-- Initial Pose of RTAB-Map -->
+  <!-- <node pkg="tf2_ros" type="static_transform_publisher"
+      name="map_to_odom"
+      args="0.44 -0.1 0.592 0 0 0 map odom" /> -->
+  <node pkg="tf2_ros" type="static_transform_publisher"
+    name="map_to_odom"
+    args="-0.75 0 0.15 0 0 0 map odom" />
+  <node pkg="tf2_ros" type="static_transform_publisher"
+    name="map_to_base_link"
+    args="-1.0 0 0.25 0 0 0 map base_link"
+  />
+
+  <!-- RealSense -->
+  <include file="$(find realsense2_camera)/launch/rs_aligned_depth.launch">
+    <arg name="enable_pointcloud" value="true"/>
+  </include>
+
+  <!-- MoveIt! -->
+  <include file="$(find i611_moveit_config)/launch/real.launch"/>
+
+  <!-- RTAB-Map -->
+  <include file="$(find rtabmap_ros)/launch/rtabmap.launch">
+
+    <arg name="publish_tf_map" value="false"/>
+    <arg name="publish_tf_odom" value="true"/>
+    <arg name="output" value="log"/>
+
+    <!-- DB を毎回削除 -->
+    <arg name="rtabmap_args" value="--delete_db_on_start"/>
+
+    <!-- トピック指定 -->
+    <arg name="rgb_topic" value="/camera/color/image_raw"/>
+    <arg name="depth_topic" value="/camera/aligned_depth_to_color/image_raw"/>
+    <arg name="camera_info_topic" value="/camera/color/camera_info"/>
+
+    <!-- Localization-only mode -->
+    <!-- <arg name="localization"            value="true"/> -->
+    <!-- <arg name="initial_pose"            value="-1 0 0.5 0 0 0"/>    -->
+    <arg name="visual_odometry"          value="true"/>
+    <arg name="icp_odometry"             value="false"/>
+    <!-- <arg name="subscribe_scan_cloud"    value="true"/> -->
+    <!-- <arg name="scan_cloud_topic"        value="/scan_cloud"/> -->
+
+    <!-- TF -->
+    <arg name="frame_id" value="camera_link"/>
+    <arg name="odom_frame_id" value="odom"/>
+    <arg name="map_frame_id" value="map"/>
+
+  </include>
+
+  <!-- <node pkg="tf2_ros" type="static_transform_publisher" name="ds102_link_broadcaster" args="1 0 0 0 0 0 1 map ds102_link" /> -->
+
+  <node pkg="i611_ros" type="pc_align_node.py" name="pc_align_node" output="screen">
+    <param name="input_cloud_topic" value="/camera/depth/color/points"/>
+    <param name="output_cloud_topic" value="/points_aligned"/>
+    <param name="ds102_done_topic" value="/ds102/move_done"/>
+    <param name="arm_done_topic" value="/arm/move_done"/>
+    <param name="reference_mode" value="pcd"/>
+    <param name="reference_pcd_path" value="$(env HOME)/reference.pcd"/>
+    <param name="use_open3d" value="true"/>
+    <param name="debug" value="true"/>
+  </node>
+
+  <!-- Initial positions (arm + turntable) -->
+  <node pkg="i611_ros" type="init_positions.py" name="init_positions" output="screen">
+    <param name="turntable_angle" value="0.0"/>
+    <param name="turntable_sub_timeout" value="5.0"/>
+  </node>
+
+  <group if="$(arg enable_moveit_done_bridge)">
+    <node pkg="i611_ros" type="moveit_done_bridge.py" name="moveit_done_bridge" output="screen">
+      <param name="arm_done_topic" value="$(arg arm_done_topic)"/>
+    </node>
+  </group>
+
+  <group>
+    <node name="trans_node" pkg="i611_ros" type="trans_node.py" output="screen">
+      <param name="end_effector_link" value="L515_link"/>
+      <param name="abort_on_moveit_failure" value="false"/>
+    </node>
+  </group>
+
+  <node name="policy_path_node" pkg="i611_ros" type="policy_path_node.py" output="screen">
+    <param name="pose_array_topic" value="/policy/poses"/>
+    <param name="path_topic" value="/policy/poses_path"/>
+    <param name="path_length" value="0"/>
+  </node>
+
+
+  <node name="ee_state_node" pkg="i611_ros" type="ee_state_node.py" output="screen">
+    <param name="map_frame" value="map"/>
+    <param name="ds102_link_frame" value="ds102_link"/>
+    <param name="ee_link" value="L515_link"/>
+    <param name="ee_trans_frame" value="ee_state"/>
+    <param name="rate_hz" value="30.0"/>
+  </node>
+
+  <!-- ===== RViz ===== -->
+  <node pkg="rviz"
+        type="rviz"
+        name="rviz"
+        args="-d $(find i611_ros)/config/rviz_config.rviz"
+        required="false"/>
+  <!-- <node pkg="rviz"
+      type="rviz"
+      name="rviz"
+      args="-d $(find i611_ros)/config/rviz_config_eval.rviz"
+      required="false"/> -->
+</launch>

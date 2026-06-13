@@ -1,0 +1,11 @@
+moveit_setup_assistant_config:
+  URDF:
+    package: i611_ros
+    relative_path: models/i611/i611.urdf
+    xacro_args: ""
+  SRDF:
+    relative_path: config/fsrobo_r.srdf
+  CONFIG:
+    author_name: Itsuki Hirako
+    author_email: treeitsuki@g.ecc.u-tokyo.ac.jp
+    generated_timestamp: 1766562418

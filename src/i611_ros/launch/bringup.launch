@@ -1,0 +1,15 @@
+<launch>
+    <node name="i611_interface" pkg="i611_ros" type="i611_interface.py" output="screen">
+        <param name="robot_ip" value="192.168.0.23" />
+        <param name="robot_port" value="4416" />
+    </node>
+
+    <rosparam file="$(find i611_ros)/config/i611_control.yaml" command="load"/>
+
+    <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false"
+          output="screen" ns="/i611" args="arm_controller joint_state_controller"/>
+
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="false" output="screen">
+        <remap from="/joint_states" to="/i611/joint_states" />
+    </node>
+</launch>

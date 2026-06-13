@@ -1,0 +1,44 @@
+<launch>
+
+  <!-- 初期姿勢 (map → odom)
+  <node pkg="tf2_ros"
+        type="static_transform_publisher"
+        name="map_to_odom_init"
+        args="0.44 -0.1 0.6 0 0 0 map camera_link"/> -->
+
+
+  <!-- ============================= -->
+  <!-- RealSense -->
+  <!-- ============================= -->
+  <include file="$(find realsense2_camera)/launch/rs_aligned_depth.launch"/>
+
+  <!-- ============================= -->
+  <!-- RTAB-Map -->
+  <!-- ============================= -->
+  <include file="$(find rtabmap_ros)/launch/rtabmap.launch">
+
+    <!-- DB を毎回削除 -->
+    <arg name="rtabmap_args" value="--delete_db_on_start"/>
+
+    <!-- トピック指定 -->
+    <arg name="rgb_topic" value="/camera/color/image_raw"/>
+    <arg name="depth_topic" value="/camera/aligned_depth_to_color/image_raw"/>
+    <arg name="camera_info_topic" value="/camera/color/camera_info"/>
+
+    
+    <!-- TF -->
+    <arg name="frame_id" value="camera_link"/>
+    <arg name="odom_frame_id" value="odom"/>
+    <arg name="map_frame_id" value="map"/>
+
+  </include>
+
+
+  <!-- ===== RViz ===== -->
+  <node pkg="rviz"
+        type="rviz"
+        name="rviz"
+        args="-d $(find i611_ros)/config/rviz_config.rviz"
+        required="false"/>
+
+</launch>

@@ -1,0 +1,40 @@
+<launch>
+  <arg name="robot_ip" default="192.168.0.23"/>
+  <arg name="robot_port" default="4416"/>
+  <arg name="command_method" default="move_joint_nores"/>
+
+  <include file="$(find i611_ros_control)/launch/i611_ros_control.launch">
+    <arg name="robot_ip" value="$(arg robot_ip)"/>
+    <arg name="robot_port" value="$(arg robot_port)"/>
+    <arg name="command_method" value="$(arg command_method)"/>
+  </include>
+
+  <include file="$(find i611_moveit_config)/launch/planning_context.launch">
+    <arg name="load_robot_description" value="true"/>
+  </include>
+
+  <include file="$(find i611_moveit_config)/launch/move_group.launch">
+    <arg name="publish_monitored_planning_scene" value="true"/>
+    <arg name="fake_execution_type" value="false"/>
+    <arg name="moveit_controller_manager" value="ros_control"/>
+  </include>
+
+  <!-- <include file="$(find i611_moveit_config)/launch/moveit_rviz.launch">
+    <arg name="rviz_config" value="$(find i611_moveit_config)/launch/moveit.rviz"/>
+  </include> -->
+
+  <node name="ds102_driver" pkg="i611_ros" type="ds102_driver.py" output="screen"/>
+
+  <node
+    pkg="robot_state_publisher"
+    type="robot_state_publisher"
+    name="robot_state_publisher"
+    output="screen">
+  </node>
+
+  <node pkg="tf2_ros" type="static_transform_publisher"
+    name="map_to_ds102_link"
+    args=" 0 0 0 0 0 0 map ds102_link" 
+  />
+
+</launch>

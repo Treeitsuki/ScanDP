@@ -1,0 +1,89 @@
+<mujoco model="i611">
+  <!-- <compiler angle="radian" meshdir="asset" autolimits="true"/> -->
+  <!-- <option integrator="implicit"/> -->
+  <compiler inertiafromgeom="true" angle="radian" coordinate="local" meshdir="assets"/>
+  <option timestep="0.01" gravity="0 0 0" iterations="20" integrator="Euler" />
+
+  <default>
+    <joint armature="0.04" damping="1" limited="true"/>
+    <geom friction=".8 .1 .1" density="300" margin="0.002" condim="1" contype="0" conaffinity="0"/>
+    <default class="i611">
+      <material specular="0.5" shininess="0.25"/>
+      <default class="visual">
+        <geom type="mesh" contype="0" conaffinity="0" group="2"/>
+      </default>
+    </default>
+  </default>
+
+  <asset>
+    <material class="i611" name="green" rgba="0 1 0 1"/>
+    <material class="i611" name="gray" rgba="0.792156862745098 0.819607843137255 0.933333333333333 1"/>
+
+    <!-- collison meshes 
+    <mesh name="base_link_c" file="base_link_collision.stl"/>
+    <mesh name="Link1_c" file="Link1_collision.stl"/>
+    <mesh name="Link2_c" file="Link2_collision.stl"/>
+    <mesh name="Link3_c" file="Link3_collision.stl"/>
+    <mesh name="Link4_c" file="Link4_collision.stl"/>
+    <mesh name="Link5_c" file="Link5_collision.stl"/>
+    <mesh name="Link6_c" file="Link6_collision.stl"/> -->
+
+    <!-- Visial meshes -->
+    <mesh file="base_link.STL"/>
+    <mesh file="Link1.STL"/>
+    <mesh file="Link2.STL"/>
+    <mesh file="Link3.STL"/>
+    <mesh file="Link4.STL"/>
+    <mesh file="Link5.STL"/>
+    <mesh file="Link6.STL"/>
+  </asset>
+
+  <worldbody>
+    <light name="top" pos="0 0 2" mode="trackcom"/>
+    <body name="base_link" pos="0 0 0" childclass="i611">
+      <!--inertial mass="0.224918104064038" pos="0 0 0"
+        fullinertia="0.000389773121010351 5.34979023842647E-08 2.00299715681034E-09 0.000393784206533644 1.8618345474573E-06 0.000763322543979528"/-->
+      <geom mesh="base_link" material="gray" class="visual"/>
+      <!-- geom mesh="base_link_c" class="collision"/ -->
+      <body name="Link1" pos="0 0 0">
+        <joint name="Joint1" type="hinge" pos="0 0 0" axis="0 0 1" range="-4.1888 4.1888" damping=".1" />
+        <geom material="gray" mesh="Link1" class="visual"/>
+        <!--geom mesh="Link1_c" class="collision"/-->
+        <body name="Link2" pos="0 0 0.0875" quat="1 0 0 0">
+          <joint name="Joint2" type="hinge" pos="0 0 0" axis="1 0 0" range="-4.1888 4.1888" damping=".1" />
+          <geom mesh="Link2" material="gray" class="visual"/>
+          <!--geom mesh="Link2_c" class="collision"/-->
+          <body name="Link3" pos="0 0 0.385">
+            <joint name="Joint3" type="hinge" pos="0 0 0" axis="1 0 0" range="-4.1888 4.1888" damping=".1" />
+            <geom mesh="Link3" material="gray" class="visual"/>
+            <!--geom mesh="Link3_c" class="collision"/-->
+            <body name="Link4" pos="0 0 0.275">
+              <joint name="Joint4" type="hinge" pos="0 0 0" axis="0 0 1" range="-4.1888 4.1888" damping=".1" />
+              <geom mesh="Link4" material="gray" class="visual" />
+              <!--geom mesh="Link4_c" class="collision" /-->
+              <body name="Link5" pos="0.1003 0 0">
+                <joint name="Joint5" type="hinge" pos="0 0 0" axis="1 0 0" range="-4.1888 4.1888" damping=".1" />
+                <geom mesh="Link5" material="gray" class="visual" />
+                <!--geom mesh="Link5_c" class="collision"/-->
+                <body name="Link6" pos="0 0 0.085" euler="0 0 -0.5">
+                  <joint name="Joint6" type="hinge" pos="0 0 0" axis="0 0 1" range="-6.2832 6.2832" damping=".1" />
+                  <geom mesh="Link6" material="gray" class="visual" />
+                  <!--geom mesh="Link6_c" class="collision" /-->
+                </body>
+              </body>
+            </body>
+          </body>
+        </body>
+      </body>
+    </body>
+  </worldbody>
+
+  <actuator>
+    <motor joint="Joint1" ctrlrange="-2.0 2.0" ctrllimited="true" />
+    <motor joint="Joint2" ctrlrange="-2.0 2.0" ctrllimited="true" />
+    <motor joint="Joint3" ctrlrange="-2.0 2.0" ctrllimited="true" />
+    <motor joint="Joint4" ctrlrange="-2.0 2.0" ctrllimited="true" />
+    <motor joint="Joint5" ctrlrange="-2.0 2.0" ctrllimited="true" />
+    <motor joint="Joint6" ctrlrange="-2.0 2.0" ctrllimited="true" />
+  </actuator>
+</mujoco>

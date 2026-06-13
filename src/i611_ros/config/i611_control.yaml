@@ -1,0 +1,21 @@
+i611:
+  # ジョイント状態をパブリッシュする設定
+  joint_state_controller:
+    type: joint_state_controller/JointStateController
+    publish_rate: 50
+
+  # メインの軌跡制御コントローラ
+  arm_controller:
+    type: position_controllers/JointTrajectoryController
+    joints:
+      - Joint1
+      - Joint2
+      - Joint3
+      - Joint4
+      - Joint5
+      - Joint6
+    constraints:
+      goal_time: 0.6
+      stopped_velocity_tolerance: 0.05
+      Joint1: { trajectory: 0.1, goal: 0.1 }
+    stop_navigation_algorithms: false

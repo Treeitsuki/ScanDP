@@ -1,0 +1,205 @@
+<mujoco model="i611">
+    <compiler angle="radian" meshdir="assets" autolimits="true"/>
+
+    <size njmax="500" nconmax="100" />
+    <option integrator="implicitfast" />
+
+    <default>
+        <joint armature="0.04" damping="1" limited="true"/>
+        <default class="i611">
+            <material specular="0.5" shininess="0.25"/>
+            <default class="visual">
+                <geom type="mesh" contype="0" conaffinity="0" group="2"/>
+            </default>
+        </default>
+    </default>
+
+    <asset>
+        <material class="i611" name="green" rgba="0.2 0.6 0.3 1.0"/>
+        <material class="i611" name="black" rgba="0.0 0.0 0.0 1.0"/>
+        <material class="i611" name="blue" rgba="0.0 0.0 0.8 1.0"/>
+        <material class="i611" name="orange" rgba="1.0 0.423529411765 0.0392156862745 1.0"/>
+        <material class="i611" name="brown" rgba="0.870588235294 0.811764705882 0.764705882353 1.0"/>
+        <material class="i611" name="red" rgba="0.8 0.0 0.0 1.0"/>
+        <material class="i611" name="white" rgba="1.0 1.0 1.0 1.0"/>
+        <material class="i611" name="grey" rgba="0.82 0.82 0.82 1"/>
+        <material class="i611" name="skyblue" rgba="0.792157 0.819608 0.933333 1"/>
+
+        <mesh name="base_link" file="base_link.STL" />
+        <mesh name="Link1" file="Link1.STL" />
+        <mesh name="Link2_nsr1105n" file="Link2_nsr1105n.stl" />
+        <mesh name="Link3" file="Link3.STL" />
+        <mesh name="Link4_nsr1105n" file="Link4_nsr1105n.stl" />
+        <mesh name="Link5" file="Link5.STL" />
+        <mesh name="Link6" file="Link6.STL" />
+        <!-- <mesh name="base" file="base.stl" scale="0.001 0.001 0.001" />
+        <mesh name="r1" file="r1.stl" scale="0.001 0.001 0.001" />
+        <mesh name="r2" file="r2.stl" scale="0.001 0.001 0.001" />
+        <mesh name="l1" file="l1.stl" scale="0.001 0.001 0.001" />
+        <mesh name="l2" file="l2.stl" scale="0.001 0.001 0.001" /> -->
+    </asset>
+
+    <worldbody>
+        <geom type="mesh" material="grey" mesh="base_link" />
+        <body name="Link1" pos="0 0 0">
+            <inertial 
+                pos="-0.00449037 5.42441e-06 0.0715874" 
+                quat="0.967682 0.000223485 -0.252162 -0.00239361" 
+                mass="1.1965" 
+                diaginertia="0.00244633 0.0023808 0.00205555" />
+            <joint 
+                name="Joint1" 
+                pos="0 0 0" 
+                axis="0 0 1" 
+                limited="true" 
+                range="-4.1888 4.1888" />
+            <geom type="mesh" material="green" mesh="Link1" />
+            <body name="Link2" pos="0 0 0.0875">
+                <inertial 
+                    pos="-0.126464 0 0.189799" 
+                    quat="0.707096 -0.00201783 -0.00199725 0.707112" 
+                    mass="3.71491" 
+                    diaginertia="0.10032 0.0996479 0.00606777" />
+                <joint 
+                    name="Joint2" 
+                    pos="0 0 0" 
+                    axis="1 0 0" 
+                    limited="true" 
+                    range="-4.1888 4.1888" />
+                <geom type="mesh" material="grey" mesh="Link2_nsr1105n" />
+                <body name="Link3" pos="0 0 0.42">
+                    <inertial 
+                        pos="-0.0181716 -8.39943e-06 0.00361737" 
+                        quat="0.616898 0.349002 0.350624 0.612125" 
+                        mass="0.503493" 
+                        diaginertia="0.00074656 0.000722075 0.000566212" />
+                    <joint 
+                        name="Joint3" 
+                        pos="0 0 0" 
+                        axis="1 0 0" 
+                        limited="true" 
+                        range="-4.1888 4.1888" />
+                    <geom type="mesh" material="green" mesh="Link3" />
+                    <body name="Link4" pos="0 0 0.44">
+                        <inertial 
+                            pos="0.00290244 4.92118e-06 -0.0738375" 
+                            quat="0.707238 0.0164003 0.0164883 0.706593" 
+                            mass="0.835817" 
+                            diaginertia="0.0052656 0.00519384 0.000580053" />
+                        <joint 
+                            name="Joint4" 
+                            pos="0 0 0" 
+                            axis="0 0 1" 
+                            limited="true" 
+                            range="-4.1888 4.1888" />
+                        <geom type="mesh" material="grey" mesh="Link4_nsr1105n" />
+                        <body name="Link5" pos="0.1003 0 0">
+                            <inertial 
+                                pos="-0.00762764 -1.06459e-05 0.00458168" 
+                                quat="0.937551 0.0455607 0.318569 0.132045" 
+                                mass="0.39752" 
+                                diaginertia="0.000422431 0.000421616 0.000320504" />
+                            <joint 
+                                name="Joint5" 
+                                pos="0 0 0" 
+                                axis="1 0 0" 
+                                limited="true" 
+                                range="-4.1888 4.1888" />
+                            <geom type="mesh" material="green" mesh="Link5" />
+                            <body name="Link6" pos="0 0 0.085" quat="0.707141 0 0 -0.707073">
+                                <inertial 
+                                    pos="0.000272446 -1.89837e-06 0.0385836" 
+                                    quat="0.70689 -0.00593408 -0.00586013 0.707275" 
+                                    mass="0.441993" 
+                                    diaginertia="1.0006 1.00054 1.00017" />
+                                <joint 
+                                    name="Joint6" 
+                                    pos="0 0 0" 
+                                    axis="0 0 1" 
+                                    limited="true" 
+                                    range="-6.2832 6.2832" />
+                                <geom type="mesh" material="grey" mesh="Link6" />
+                                <geom size="0.04 0.025 0.0175" pos="0 0 0.0175" type="box" />
+                                <!-- <geom pos="0 0 0.035" type="mesh" mesh="base" /> -->
+                                <!--Add body for "eef_site" and "attachment_site" -->
+                                <body name="tool0_link" pos="0 0.1 0" quat="-1 1 0 0">
+                                    <site name="attachment_site" pos="0 0 0" quat="1 0 0 0"/>
+                                    <site name="eef_site" pos="0 0 0.05" quat="0 0.7071068 -0.7071068 0"/>
+                                </body>
+                                <!-- <body name="rh_p12_rn_r1" pos="0 0.008 0.083">
+                                    <inertial 
+                                        pos="0 0.034 0.004" 
+                                        mass="0.068" 
+                                        diaginertia="1 1 1" />
+                                    <joint 
+                                        name="rh_p12_rn" 
+                                        pos="0 0 0" 
+                                        axis="1 0 0" 
+                                        limited="true" 
+                                        range="0 1.1" 
+                                        damping="0.7" />
+                                    <geom type="mesh" mesh="r1" />
+                                    <body name="rh_p12_rn_r2" pos="0 0.0493634 0.0285">
+                                        <inertial 
+                                            pos="0 0.006 0.011" 
+                                            mass="0.022" 
+                                            diaginertia="1 1 1" />
+                                        <joint 
+                                            name="rh_r2" 
+                                            pos="0 0 0" 
+                                            axis="-1 0 0" 
+                                            limited="true" 
+                                            range="0 1" 
+                                            damping="0.7" />
+                                        <geom type="mesh" mesh="r2" />
+                                    </body>
+                                </body>
+                                <body name="rh_p12_rn_l1" pos="0 -0.008 0.083">
+                                    <inertial 
+                                        pos="0 -0.034 0.004" 
+                                        mass="0.068" 
+                                        diaginertia="1 1 1" />
+                                    <joint 
+                                        name="rh_l1" 
+                                        pos="0 0 0" 
+                                        axis="-1 0 0" 
+                                        limited="true" 
+                                        range="0 1.1" 
+                                        damping="0.7" />
+                                    <geom type="mesh" mesh="l1" />
+                                    <body name="rh_p12_rn_l2" pos="0 -0.0493634 0.0285">
+                                        <inertial 
+                                            pos="0 -0.006 0.011" 
+                                            mass="0.022" 
+                                            diaginertia="1 1 1" />
+                                        <joint 
+                                            name="rh_l2" 
+                                            pos="0 0 0" 
+                                            axis="1 0 0" 
+                                            limited="true" 
+                                            range="0 1" 
+                                            damping="0.7" />
+                                        <geom type="mesh" mesh="l2" />
+                                    </body>
+                                </body>-->
+                            </body>
+                        </body>
+                    </body>
+                </body>
+            </body>
+        </body>
+    </worldbody>
+
+  <!--   <actuator>
+        <motor joint="Joint1" ctrlrange="-4.1888 4.1888" ctrllimited="true" />
+        <motor joint="Joint2" ctrlrange="-4.1888 4.1888" ctrllimited="true" />
+        <motor joint="Joint3" ctrlrange="-4.1888 4.1888" ctrllimited="true" />
+        <motor joint="Joint4" ctrlrange="-4.1888 4.1888" ctrllimited="true" />
+        <motor joint="Joint5" ctrlrange="-4.1888 4.1888" ctrllimited="true" />
+        <motor joint="Joint6" ctrlrange="-6.2832 6.2832" ctrllimited="true" />
+        <motor joint="rh_p12_rn" ctrlrange="0 1.1" ctrllimited="true" />
+        <motor joint="rh_r2" ctrlrange="0 1" ctrllimited="true" />
+        <motor joint="rh_l1" ctrlrange="0 1.1" ctrllimited="true" />
+        <motor joint="rh_l2" ctrlrange="0 1" ctrllimited="true" />
+    </actuator> -->
+</mujoco>

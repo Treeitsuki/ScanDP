@@ -1,0 +1,41 @@
+digraph G {
+node [shape=box];
+"base_link" [label="base_link"];
+"Link1" [label="Link1"];
+"Link2" [label="Link2"];
+"Link3" [label="Link3"];
+"Link4" [label="Link4"];
+"Link5" [label="Link5"];
+"Link6" [label="Link6"];
+"hand_base" [label="hand_base"];
+"rh_p12_rn_base" [label="rh_p12_rn_base"];
+"rh_p12_rn_l1" [label="rh_p12_rn_l1"];
+"rh_p12_rn_l2" [label="rh_p12_rn_l2"];
+"rh_p12_rn_r1" [label="rh_p12_rn_r1"];
+"rh_p12_rn_r2" [label="rh_p12_rn_r2"];
+node [shape=ellipse, color=blue, fontcolor=blue];
+"base_link" -> "Joint1" [label="xyz: 0 0 0 \nrpy: 0 -0 0"]
+"Joint1" -> "Link1"
+"Link1" -> "Joint2" [label="xyz: 0 0 0.0875 \nrpy: 0 -0 0"]
+"Joint2" -> "Link2"
+"Link2" -> "Joint3" [label="xyz: 0 0 0.42 \nrpy: 0 -0 0"]
+"Joint3" -> "Link3"
+"Link3" -> "Joint4" [label="xyz: 0 0 0.44 \nrpy: 0 -0 0"]
+"Joint4" -> "Link4"
+"Link4" -> "Joint5" [label="xyz: 0.1003 0 0 \nrpy: 0 -0 0"]
+"Joint5" -> "Link5"
+"Link5" -> "Joint6" [label="xyz: 0 0 0.085 \nrpy: 0 0 -1.5707"]
+"Joint6" -> "Link6"
+"Link6" -> "arm_fixed1" [label="xyz: 0 0 0 \nrpy: 0 -0 0"]
+"arm_fixed1" -> "hand_base"
+"hand_base" -> "arm_fixed2" [label="xyz: 0 0 0 \nrpy: 0 -0 0"]
+"arm_fixed2" -> "rh_p12_rn_base"
+"rh_p12_rn_base" -> "rh_l1" [label="xyz: 0 -0.008 0.083 \nrpy: 0 -0 0"]
+"rh_l1" -> "rh_p12_rn_l1"
+"rh_p12_rn_l1" -> "rh_l2" [label="xyz: 0 -0.0493634 0.0285 \nrpy: 0 -0 0"]
+"rh_l2" -> "rh_p12_rn_l2"
+"rh_p12_rn_base" -> "rh_p12_rn" [label="xyz: 0 0.008 0.083 \nrpy: 0 -0 0"]
+"rh_p12_rn" -> "rh_p12_rn_r1"
+"rh_p12_rn_r1" -> "rh_r2" [label="xyz: 0 0.0493634 0.0285 \nrpy: 0 -0 0"]
+"rh_r2" -> "rh_p12_rn_r2"
+}
