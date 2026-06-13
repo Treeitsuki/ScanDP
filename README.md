@@ -1,6 +1,8 @@
 # ScanDP: Generalizable 3D Scanning with Diffusion Policy
+<a href='https://hogehoge'><img src='https://img.shields.io/badge/IROS 2026-blue' alt='Project'></a>
+<a href='https://treeitsuki.github.io/ScanDP/'><img src='https://img.shields.io/badge/Project-ScanDP-green' alt='Project'></a>
+<a href='https://arxiv.org/abs/2603.10390'><img src='https://img.shields.io/badge/Paper-Arxiv-red' alt='Arxiv'></a>
 
-[![arXiv](https://img.shields.io/badge/arXiv-2603.10390-b31b1b.svg)](https://arxiv.org/abs/2603.10390)
 
 This is the official code release for the paper:
 
@@ -10,7 +12,7 @@ This is the official code release for the paper:
 
 [日本語版 README はこちら](README_ja.md)
 
-![ScanDP overview](docs/imgs/art.png)
+![ScanDP overview](docs/imgs/teaser_real.png)
 
 ## Overview
 
