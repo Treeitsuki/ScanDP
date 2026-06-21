@@ -1,10 +1,16 @@
-# ScanDP: Generalizable 3D Scanning with Diffusion Policy
+
 <!-- <a href='https://hogehoge'><img src='https://img.shields.io/badge/IROS 2026-blue' alt='Project'></a> -->
+<div align="center">
+<h1>ScanDP: Generalizable 3D Scanning<br> with Diffusion Policy</h1>
+
 <a href='https://treeitsuki.github.io/ScanDP/'><img src='https://img.shields.io/badge/Project-ScanDP-green' alt='Project'></a>
 <a href='https://arxiv.org/abs/2603.10390'><img src='https://img.shields.io/badge/Paper-Arxiv-red' alt='Arxiv'></a>
 
+**[3D Vision Laboratory, The University of Tokyo](https://www.cvl.iis.u-tokyo.ac.jp/en/)**
+</div>
 
 This is the official code release for the paper:
+
 
 > **ScanDP: Generalizable 3D Scanning with Diffusion Policy**  
 > Itsuki Hirako, Ryo Hakoda, Yubin Liu, Matthew Hwang, Yoshihiro Sato, Takeshi Oishi  
